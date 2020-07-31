@@ -1,6 +1,9 @@
 var path = require('path'),
   express = require('express'),
+  livereload = require('livereload'),
+  connectLivereload = require('connect-livereload'),
   app = express(),
+  liveReloadServer = livereload.createServer(),
   compression = require('compression'),
   exphbs = require('express-handlebars'),
   _ = require('lodash'),
@@ -17,20 +20,19 @@ var defaults = {
   staticPath: '/compiled',
   stylesheets: ['stylesheet.css'],
   scripts: ['bundle.js'],
-  ext: 'html',
+  ext: 'hbs',
   middlewares: [],
   helpers: {}
 };
 
-module.exports = function start(options) {
+module.exports = function styleguide(options) {
   options = options || {};
 
   var ext = options.ext || defaults.ext,
     componentDir = options.components || defaults.components,
     rootName = options.rootName || defaults.rootName,
     dataDir = options.data || defaults.data,
-    staticLocalDir =
-      options.staticLocalDir || options.static || defaults.staticLocalDir,
+    staticLocalDir = options.staticLocalDir || options.static || defaults.staticLocalDir,
     staticPath = options.staticPath || defaults.staticPath,
     stylesheets = options.stylesheets || defaults.stylesheets,
     scripts = options.scripts || defaults.scripts,
@@ -40,7 +42,7 @@ module.exports = function start(options) {
   var ehbs = exphbs.create({
     defaultLayout: 'component',
     layoutsDir: clientDir,
-    extname: '.html',
+    extname: '.hbs',
     partialsDir: componentDir,
     helpers: helpers
   });
@@ -54,12 +56,21 @@ module.exports = function start(options) {
     app.use(middleware);
   });
 
+  liveReloadServer.watch( componentDir );
+
+  liveReloadServer.server.once( 'connection', () => {
+    setTimeout( () => {
+      liveReloadServer.refresh( '/' );
+    }, 100 );
+  });
+
   app.engine(ext, ehbs.engine);
   app.set('views', componentDir);
   app.set('view engine', ext);
   app.use(compression());
   app.use('/client', express.static(clientDir));
   app.use(staticPath, express.static(staticLocalDir));
+  app.use( connectLivereload() );
 
   return new Promise(function(resolve, reject) {
     return ehbs
@@ -68,13 +79,14 @@ module.exports = function start(options) {
         return ehbs
           .getTemplates(componentDir)
           .then(function(templates) {
-            var data = util.getTemplateData(dataDir + '/**/*.json'),
-              components = util.getComponentsInfo({
+            var data = util.getTemplateData(dataDir + '/*.json');
+
+            var components = util.getComponentsInfo({
                 componentDir: componentDir,
                 rootName: rootName,
                 templates: templates,
                 partials: partials,
-                data: data
+                data: data,
               });
 
             app.get('/', function(req, res) {
@@ -130,12 +142,9 @@ module.exports = function start(options) {
             app.set('port', process.env.PORT || 3000);
 
             var server = app.listen(app.get('port'), function() {
-              var host = server.address().address,
-                port = server.address().port;
               console.log(
-                'Styleguide server started at http://%s:%s',
-                host,
-                port
+                'Styleguide server started at http://localhost:%s',
+                server.address().port
               );
             });
 

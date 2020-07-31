@@ -24,9 +24,13 @@ function getComponentsInfo(options) {
 
   for (var tplName in options.templates) {
     matches = tplName.match(re);
+
     componentType = matches ? matches[1] : options.rootName;
-    componentName = matches ? matches[2] : tplName.replace(/\.html/, '');
+
+    componentName = matches ? matches[2] : tplName.replace(/\.hbs/, '');
+
     dataForFile = getDataForFile(path.resolve(options.componentDir, tplName));
+
     component = {
       type: componentType,
       name: componentName,
@@ -43,6 +47,7 @@ function getComponentsInfo(options) {
     components.all.push(component);
 
     components.typed[componentType] = components.typed[componentType] || [];
+
     components.typed[componentType].push(component);
   }
 
@@ -85,21 +90,37 @@ function getCapitalizedString(s) {
 }
 
 function getDataForFile(filePath) {
-  var jsonPath = filePath.replace(/.html$/, '.json');
+  var jsonPath = filePath.replace(/.hbs$/, '.json');
+
   try {
-    var res = require(jsonPath);
-    return res;
+    return require( jsonPath );
   } catch (e) {
     return {};
   }
 }
 
-function getTemplateData(pattern) {
-  var dataFiles = glob.sync(pattern),
-    data = {};
-  dataFiles.forEach(function(file) {
-    var key = path.basename(file, '.json');
-    data[key] = require(file);
+/**
+ * Receives a filepath pattern and merges the json data in a single array.
+ * Each array key is the basename of the json files.
+ *
+ * @param {string} pattern The filepath pattern.
+ *
+ * @return {array} The data array.
+ */
+function getTemplateData( pattern ) {
+  var dataFiles = glob.sync( pattern );
+  var data = {};
+
+  dataFiles.forEach(function( file ) {
+    var key = path.basename( file, '.json' );
+
+    if ( 'global' === key ) {
+      var globalData = require( file );
+
+      data = _.assign( data, globalData );
+    } else {
+      data[key] = require( file );
+    }
   });
   return data;
 }

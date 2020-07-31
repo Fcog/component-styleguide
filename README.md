@@ -61,7 +61,6 @@ And here's the result in the browser:
 You can work with the default settings straight away, but you might want to customize some things. By default:
 
 * Use `atoms`, `molecules`, and `organisms`, `templates` and `pages`, and they will show up in that order and as an icon. But you can name the directories any way you like.
-* The extension `html` is expected, but you can configure any other extension.
 * If you need [stub data](#stub-data) to feed to your templates, you can put `*.json` files in the `/data` directory.
 * To use your stylesheets, put filenames in the `stylesheets` array, and make sure these files are/end up in the `/compiled` directory (also configurable).
 * Same for `scripts`.
@@ -70,13 +69,14 @@ To specify alternative settings (showing default values here):
 
     styleguide({
         components: './components',
-        ext: 'html',
         data: './data',
         staticLocalDir: './compiled',
         staticPath: '/compiled',
         stylesheets: ['stylesheet.css'],
         scripts: ['bundle.js'],
     });
+    
+Note: Change of extension is not supported.    
 
 ## Command Line Interface
 
@@ -86,7 +86,7 @@ Alternatively, the styleguide can be started directly from the CLI without any s
 
 Here's an example with default settings:
 
-    styleguide --components components --ext html --data data
+    styleguide --components components --data data
 
 You would need to either install it globally (i.e. `npm install -g component-styleguide`), or use it from a `package.json` [script](https://docs.npmjs.com/misc/scripts).
 
@@ -121,6 +121,13 @@ molecules
   header.html
   header.json
 ```
+
+You can also use a `global.json` files to add global data.
+
+    {
+       "url": "http://google.com",
+       "title": "Google"
+    }
 
 ### CSS & JS
 
