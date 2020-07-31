@@ -20,7 +20,7 @@ You can use it as a development server, and/or host it somewhere as a Node servi
 
 ### 1. Install component-styleguide
 
-    npm install component-styleguide --save
+    npm install handlebars-component-styleguide --save
 
 ### 2. Structure
 
