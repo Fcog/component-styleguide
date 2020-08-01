@@ -1,6 +1,6 @@
 {
   "name": "handlebars-component-styleguide",
-  "version": "2.2.1",
+  "version": "2.2.3",
   "description": "Simple Handlebars live styleguide",
   "keywords": [
     "styleguide",
@@ -8,6 +8,7 @@
     "handlebars",
     "patterns"
   ],
+  "main": "server/index.js",
   "bin": {
     "styleguide": "bin/styleguide.js"
   },
@@ -20,8 +21,7 @@
     "handlebars": "^4.0.11",
     "livereload": "^0.9.1",
     "lodash": "^4.17.4",
-    "minimist": "^1.1.1",
-    "nodemon": "^2.0.4"
+    "minimist": "^1.1.1"
   },
   "repository": {
     "type": "git",
@@ -40,8 +40,6 @@
     "prettier": "^1.7.4"
   },
   "scripts": {
-    "start": "node ./bin/styleguide.js",
-    "watch": "nodemon --watch '**/*' --ext js,hbs,json",
     "prettier": "prettier --single-quote --write \"{bin,server}/**/*.js\""
   }
 }

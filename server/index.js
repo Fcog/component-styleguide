@@ -56,7 +56,7 @@ module.exports = function styleguide(options) {
     app.use(middleware);
   });
 
-  liveReloadServer.watch( componentDir );
+  liveReloadServer.watch( staticLocalDir );
 
   liveReloadServer.server.once( 'connection', () => {
     setTimeout( () => {

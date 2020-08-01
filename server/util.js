@@ -20,7 +20,7 @@ function getComponentsInfo(options) {
     componentType,
     componentName,
     dataForFile,
-    re = /([^\/]+)\/([^\.]+)(\.html)/;
+    re = /([^\/]+)\/([^\.]+)(\.hbs)/;
 
   for (var tplName in options.templates) {
     matches = tplName.match(re);

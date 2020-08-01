@@ -1,8 +1,17 @@
 # Component Styleguide
 
+This a fork from https://github.com/webpro/component-styleguide
+Credits go to:
+Lars Kappert
+
+## Changes added in this fork
+- The default and only handlebars extension is now .hbs
+- Added livereloading
+- Added global data stub
+
 ## Introduction
 
-Simple styleguide framework. Install [component-styleguide](https://www.npmjs.com/package/component-styleguide) into your styleguide project, and it will stay out of your way. It's inspired by [http://patternlab.io](http://patternlab.io), but is fundamentally different. And, I would say, much more flexible.
+Simple handlebars styleguide framework. Install [component-styleguide](https://www.npmjs.com/package/handlebars-component-styleguide) into your styleguide project, and it will stay out of your way. It's inspired by [http://patternlab.io](http://patternlab.io), but is fundamentally different. And, I would say, much more flexible.
 
 ## What is it?
 
@@ -37,7 +46,7 @@ Create a directory structure, like this:
 
 Write a minimal Node script (say `index.js`):
 
-    var styleguide = require('component-styleguide');
+    var styleguide = require('handlebars-component-styleguide');
     styleguide();
 
 And run it: `node index.js`.
@@ -75,8 +84,8 @@ To specify alternative settings (showing default values here):
         stylesheets: ['stylesheet.css'],
         scripts: ['bundle.js'],
     });
-    
-Note: Change of extension is not supported.    
+
+Note: Change of extension is not supported.
 
 ## Command Line Interface
 
@@ -89,6 +98,11 @@ Here's an example with default settings:
     styleguide --components components --data data
 
 You would need to either install it globally (i.e. `npm install -g component-styleguide`), or use it from a `package.json` [script](https://docs.npmjs.com/misc/scripts).
+
+## Live reload
+You can install nodemon in your project and reload the styleguide when the component's files changes.
+
+    nodemon styleguide.js --watch 'components/**/*' --ext js,css,hbs,json
 
 ## Details
 
